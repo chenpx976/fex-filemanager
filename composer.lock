@@ -1,11 +1,48 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5c6026b96e6fa11a641b51a6ba976f5e",
+    "hash": "5cf4930749552d302d24194cc92147c1",
     "packages": [
+        {
+            "name": "caouecs/laravel4-lang",
+            "version": "2.0.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/caouecs/Laravel-lang.git",
+                "reference": "857aa8d2b16841a03a4065e99e7df9e802191ec3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/caouecs/Laravel-lang/857aa8d2b16841a03a4065e99e7df9e802191ec3.zip",
+                "reference": "857aa8d2b16841a03a4065e99e7df9e802191ec3",
+                "shasum": ""
+            },
+            "suggest": {
+                "overtrue/laravel-lang": "Command to add languages in your project"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "caouecs",
+                    "email": "caouecs@caouecs.net"
+                }
+            ],
+            "description": "Languages for Laravel",
+            "keywords": [
+                "lang",
+                "languages",
+                "laravel",
+                "lpm"
+            ],
+            "time": "2015-09-16 10:16:58"
+        },
         {
             "name": "classpreloader/classpreloader",
             "version": "2.0.0",
@@ -783,6 +820,47 @@
             "time": "2015-07-14 17:31:05"
         },
         {
+            "name": "overtrue/laravel-lang",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/laravel-lang.git",
+                "reference": "5f4c8cb61b05e3aa7021832bb5af2c311147ae50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "http://packagist.phpcomposer.com/files/overtrue/laravel-lang/5f4c8cb61b05e3aa7021832bb5af2c311147ae50.zip",
+                "reference": "5f4c8cb61b05e3aa7021832bb5af2c311147ae50",
+                "shasum": ""
+            },
+            "require": {
+                "caouecs/laravel4-lang": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Overtrue\\LaravelLang\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "overtrue",
+                    "email": "anzhengchao@gmail.com"
+                }
+            ],
+            "description": "List of 37 languages for Laravel 5",
+            "keywords": [
+                "languages",
+                "laravel",
+                "overtrue"
+            ],
+            "time": "2015-04-19 06:23:23"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -950,7 +1028,7 @@
             "version": "v2.7.4",
             "source": {
                 "type": "git",
-                "url": "git@github.com:symfony/Console.git",
+                "url": "https://github.com/symfony/Console.git",
                 "reference": "f1f7376766394f409b9b33a57a5675a52f8aad93"
             },
             "dist": {

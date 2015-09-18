@@ -41,8 +41,9 @@ class FileManger extends Controller {
 	}
 	public function getPath($path = '') {
 		$data = $this->pathFile($path);
-		$path = explode('/', $path);
-		return view('filemanager.home',compact('data','path'));
+		$paths = showCurrentLinks($path);
+		// dd($paths);
+		return view('filemanager.home',compact('data','paths'));
 	}
 	public function getFile($file)
 	{
