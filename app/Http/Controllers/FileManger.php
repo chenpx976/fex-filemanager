@@ -8,29 +8,46 @@ use \Storage;
 use \File;
 
 class FileManger extends Controller {
+	// var_dump(Storage::allFiles('./'));
+	// var_dump($contents = Storage::get('file.txt'));
+	// var_dump(Storage::disk('local')->exists('file.txt'));
+	// var_dump(Storage::size('file.txt'));
+	// // 创建文件
+	// var_dump(Storage::put('app/file.txt', 'contents'));
+	// // 创建文件夹
+	// // Storage::makeDirectory('app/dasdsa/ffewa');
+	// var_dump(Storage::allDirectories(''));
+	// var_dump(Storage::allDirectories('app'));
+	// var_dump(Storage::directories('test'));
+	// var_dump(Storage::directories('app'));
+	// var_dump(Storage::files(''));
+	// var_dump(Storage::files('app'));
+	public function pathFile($path)
+	{
+		$directories = Storage::directories($path);
+
+		$files = Storage::files($path);
+		$data['directories'] = $directories;
+		$data['files'] = $files;
+		return $data;
+	}
 	/**
 	 * Display a listing of the resource.
-	 *
+	 * 返回主目录下文件夹和文件列表
 	 * @return Response
 	 */
 	public function index() {
-		var_dump(Storage::allFiles('./'));
-		var_dump($contents = Storage::get('file.txt'));
-		var_dump(Storage::disk('local')->exists('file.txt'));
-		var_dump(Storage::size('file.txt'));
-		// 创建文件
-		var_dump(Storage::put('app/file.txt', 'contents'));
-		// 创建文件夹
-		// Storage::makeDirectory('app/dasdsa/ffewa');
-		var_dump(Storage::allDirectories(''));
-		var_dump(Storage::allDirectories('app'));
-		var_dump(Storage::directories('test'));
-		var_dump(Storage::directories('app'));
-		var_dump(Storage::files(''));
-		var_dump(Storage::files('app'));
+		return redirect()->action('FileManger@getPath');
 	}
-	public function getPath($path) {
-		return $path;
+	public function getPath($path = '') {
+		$data = $this->pathFile($path);
+		$path = explode('/', $path);
+		return view('filemanager.home',compact('data','path'));
+	}
+	public function getFile($file)
+	{
+		$data = Storage::get($file);
+		return $data;
 	}
 	public function putDirectory() {
 		return "putDirectory";

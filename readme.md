@@ -1,9 +1,16 @@
-### [fex笔试题](https://github.com/fex-team/interview-questions)
+### [百度FEX笔试题](https://github.com/fex-team/interview-questions)
 
-使用技术：PHP
+#### 项目记录：
+
+ - 项目基于PHP框架`Laravel`
+ - 前端技术选择`bootstrap`/`jquery`
+ - 使用构建工具`Gulp`打包静态资源
+ - 搭建步骤：
+	 - `composer install`
+	 - `npm i`
+	 - `gulp`
 
 
-基本要求：
 
 * 后端可以使用任意自己喜欢的语言，比如 PHP、Python、Java 或 Node。
 * 请记录下你在解决这个问题过程中的思考，你是如何一步步解决的，以及遇到哪些技术问题和感想等。

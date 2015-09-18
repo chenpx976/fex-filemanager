@@ -4,7 +4,31 @@
     "gulp": "^3.8.8"
   },
   "dependencies": {
+    "angular": "~1.4.6",
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4",
     "laravel-elixir": "^3.0.0",
-    "bootstrap-sass": "^3.0.0"
-  }
+    "underscore": "~1.8.3",
+    "ztree": "~3.5.18"
+  },
+  "name": "fex-filemanager",
+  "description": "使用技术：PHP",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenpx976/fex-filemanager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chenpx976/fex-filemanager/issues"
+  },
+  "homepage": "https://github.com/chenpx976/fex-filemanager#readme"
 }
