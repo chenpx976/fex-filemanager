@@ -9,9 +9,12 @@
 	 - `composer install`
 	 - `npm i`
 	 - `gulp`
+ - 添加`helper`函数
+	 - 在`composer.json`配置`autoload`加载`files`
 
 
 
+#### 项目要求：
 * 后端可以使用任意自己喜欢的语言，比如 PHP、Python、Java 或 Node。
 * 请记录下你在解决这个问题过程中的思考，你是如何一步步解决的，以及遇到哪些技术问题和感想等。
 * 将源码放在 github 上。

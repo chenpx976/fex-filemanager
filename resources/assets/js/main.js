@@ -1,5 +1,2 @@
-var $ = require('jquery');
-
-$(function() {
-  console.log("加载Jquery成功");
-})
+window.$ = window.jQuery = require('jquery');
+require('../../../node_modules/bootstrap/dist/js/npm.js');

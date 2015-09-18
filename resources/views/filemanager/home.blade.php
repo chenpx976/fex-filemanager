@@ -20,6 +20,10 @@
 		</ol>
 	</div>
 	<div class="row">
+		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-cloud-upload"></span>上传</button>
+		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
+	</div>
+	<div class="row">
 		<table class="table table-bordered table-hover">
 			<thead>
 				<tr>
@@ -31,12 +35,12 @@
 			<tbody>
 			@foreach ($data['directories'] as $directory)
 				<tr>
-					<td><span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span></i></td>
+					<td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></i></td>
 					<td><a href="{{ route('getPath', $directory) }}">{{ $directory }}</a></td>
 					<td>
-						<a href="#">del</a>
-						<a href="#">change</a>
-						<a href="#">move</a>
+						<a href="{{ route('deleteFile', $directory) }}"><span class="glyphicon glyphicon-trash"></span></a>
+						<a href="{{ route('putDirectory', $directory) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+						<a href="{{ route('moveFile', $directory) }}"><span class="glyphicon glyphicon-move"></span></a>
 					</td>
 				</tr>
 			@endforeach
@@ -45,9 +49,9 @@
 					<td><span class="glyphicon glyphicon-file"></span></td>
 					<td><a href="{{ route('getFile', $file) }}">{{ $file }}</a></td>
 					<td>
-						<a href="#">del</a>
-						<a href="#">change</a>
-						<a href="#">move</a>
+					<a href="{{ route('deleteFile', $directory) }}"><span class="glyphicon glyphicon-trash"></span></a>
+					<a href="{{ route('putFile', $directory) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="{{ route('moveFile', $directory) }}"><span class="glyphicon glyphicon-move"></span></a>
 					</td>
 				</tr>
 			@endforeach
