@@ -36,7 +36,8 @@ class FileManger extends Controller {
 	 * @return Response
 	 */
 	public function index() {
-		return redirect()->action('FileManger@getPath');
+		return view('filemanager.layout');
+		// return redirect()->action('FileManger@getPath');
 	}
 	public function getPath($path = '') {
 		$data = $this->pathFile($path);

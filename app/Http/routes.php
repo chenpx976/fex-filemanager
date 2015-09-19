@@ -19,3 +19,8 @@ $router->put('manager/put/directory', ['as' => 'putDirectory', 'uses' => 'FileMa
 $router->put('manager/put/file', ['as' => 'putFile', 'uses' => 'FileManger@putFile']);
 $router->post('manager/move', ['as' => 'moveFile', 'uses' => 'FileManger@moveFile']);
 $router->delete('manager/delete', ['as' => 'deleteFile', 'uses' => 'FileManger@deleteFile']);
+
+$router->group(['prefix' => 'api'], function($router)
+{
+	$router->get('path/{path?}', ['as' => 'getPath', 'uses' => 'FileApiManger@getPath'])->where('path', '(.*)');
+});

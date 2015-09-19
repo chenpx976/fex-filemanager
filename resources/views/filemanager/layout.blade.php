@@ -9,8 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
 	</head>
 	<body>
-		<h1 class="text-center">在线文件管理系统</h1>
-		@yield('content')
+
 		<script src="{{ asset('js/main.js') }}"></script>
 	</body>
 </html>

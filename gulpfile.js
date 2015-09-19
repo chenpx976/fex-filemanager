@@ -10,8 +10,8 @@ var elixir = require('laravel-elixir');
  | file for our application, as well as publishing vendor resources.
  |
  */
-
 elixir(function(mix) {
     mix.less('app.less');
     mix.browserify('main.js');
 });
+

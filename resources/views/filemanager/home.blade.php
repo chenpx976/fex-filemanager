@@ -1,28 +1,9 @@
 @extends('filemanager.layout')
 
 @section('content')
-
 <div class="container">
-	<div class="row">
-		<ol class="breadcrumb">
-			<li>
-				<a href="{{ route('home') }}"><span class="glyphicon glyphicon-home"></span>Home</a>
-			</li>
-			@foreach ($paths as $index => $element)
-			@if ($index<count($paths) - 1)
-				<li>
-					<a href="{{ route('getPath', $element) }}">{{ showFileName($element) }}</a>
-				</li>
-			@else
-				<li class="active">{{ showFileName($element) }}</li>
-			@endif
-			@endforeach
-		</ol>
-	</div>
-	<div class="row">
-		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-cloud-upload"></span>上传</button>
-		<button type="button" data-toggle="modal" href='#createFloder' class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
-	</div>
+
+
 	<div class="row">
 		<table class="table table-bordered table-hover">
 			<thead>
