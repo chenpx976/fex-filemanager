@@ -13135,9 +13135,22 @@ return jQuery;
 },{}],16:[function(require,module,exports){
 'use strict';
 
-var $ = jQuery = require('jquery');
 var _ = require('underscore');
-// window.$ = window.jQuery = require('jquery');
+window.$ = window.jQuery = require('jquery');
 require('../../../node_modules/bootstrap/dist/js/npm.js');
+
+$(function () {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+    }
+  });
+
+  function createFloder() {
+    $('#createFloder form').submit(function (event) {
+      event.preventDefault();
+    });
+  }
+});
 
 },{"../../../node_modules/bootstrap/dist/js/npm.js":1,"jquery":14,"underscore":15}]},{},[16]);

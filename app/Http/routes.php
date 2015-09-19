@@ -14,6 +14,7 @@ $router->get('/', ['as' => 'home', 'uses' => 'FileManger@index']);
 $router->get('path/{path?}', ['as' => 'getPath', 'uses' => 'FileManger@getPath'])->where('path', '(.*)');
 $router->get('file/{file}', ['as' => 'getFile', 'uses' => 'FileManger@getFile'])->where('file', '(.*)');
 
+$router->post('manager/post/directory', ['as' => 'postDirectory', 'uses' => 'FileManger@postDirectory']);
 $router->put('manager/put/directory', ['as' => 'putDirectory', 'uses' => 'FileManger@putDirectory']);
 $router->put('manager/put/file', ['as' => 'putFile', 'uses' => 'FileManger@putFile']);
 $router->post('manager/move', ['as' => 'moveFile', 'uses' => 'FileManger@moveFile']);

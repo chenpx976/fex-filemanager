@@ -21,7 +21,7 @@
 	</div>
 	<div class="row">
 		<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-cloud-upload"></span>上传</button>
-		<button type="button" id="createFloder" class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
+		<button type="button" data-toggle="modal" href='#createFloder' class="btn btn-default"><span class="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
 	</div>
 	<div class="row">
 		<table class="table table-bordered table-hover">
@@ -61,5 +61,25 @@
 </div>
 
 
+<div class="modal fade" id="createFloder">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">创建文件夹</h4>
+			</div>
+			<div class="modal-body">
+				<form action="{{ route('postDirectory') }}" method="POST" role="form">
+					{!! csrf_field() !!}
+					<div class="form-group">
+						<label for="">文件夹名称</label>
+						<input type="text" name="folderName" class="form-control" id="" placeholder="">
+					</div>
+					<button type="submit" class="btn btn-primary algin-left">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
 @stop

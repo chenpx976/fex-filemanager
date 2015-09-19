@@ -25,7 +25,6 @@ class FileManger extends Controller {
 	public function pathFile($path)
 	{
 		$directories = Storage::directories($path);
-
 		$files = Storage::files($path);
 		$data['directories'] = $directories;
 		$data['files'] = $files;
@@ -42,13 +41,16 @@ class FileManger extends Controller {
 	public function getPath($path = '') {
 		$data = $this->pathFile($path);
 		$paths = showCurrentLinks($path);
-		// dd($paths);
 		return view('filemanager.home',compact('data','paths'));
 	}
 	public function getFile($file)
 	{
 		$data = Storage::get($file);
 		return $data;
+	}
+	public function postDirectory()
+	{
+		return response()->json($request->all());
 	}
 	public function putDirectory() {
 		return "putDirectory";
