@@ -6696,5 +6696,9 @@ button.close {
     display: none !important;
   }
 }
+tbody a,
+.breadcrumb a {
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=app.css.map */

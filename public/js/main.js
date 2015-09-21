@@ -32690,6 +32690,7 @@ module.exports = Breadcrumb;
 var React = require('react/addons');
 var Breadcrumb = require('./Breadcrumb.js');
 var Modal = require('./Modal.js');
+var FolderItem = require('./FolderItem.js');
 var Container = React.createClass({
 	displayName: 'Container',
 
@@ -32709,7 +32710,7 @@ var Container = React.createClass({
 			formDisplayed: !this.state.formDisplayed
 		});
 	},
-	onNewFolder: function onNewFolder(elem) {
+	onModalSubmit: function onModalSubmit(elem) {
 		console.log(elem);
 		$.ajax({
 			url: 'api/manager/post/directory',
@@ -32758,7 +32759,32 @@ var Container = React.createClass({
 		});
 	},
 	handleEdit: function handleEdit(elem) {},
-	handleMove: function handleMove(elem) {},
+	handleMove: function handleMove(elem) {
+		console.log(elem);
+		$.ajax({
+			url: 'api/manager/put/directory',
+			type: 'POST',
+			data: elem
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				var key = datas['directories'].indexOf(elem.oldFolder);
+				if (key > -1) {
+					datas['directories'][key] = elem.newFolderName;
+					this.setState({
+						data: datas
+					});
+				} else {
+					console.log(key, folderName, datas['directories']);
+				}
+			};
+		}).bind(this)).fail(function () {
+			console.log("error");
+		}).always(function () {
+			console.log("complete");
+		});
+	},
 	componentDidMount: function componentDidMount() {
 		$.ajax({
 			url: 'api/path/',
@@ -32797,43 +32823,8 @@ var Container = React.createClass({
 		console.log('重新renderpath', this.state);
 		var folders = data['directories'].map((function (elem, index) {
 			var simpleName = elem.split('/').pop();
-			return React.createElement(
-				'tr',
-				{ key: index },
-				React.createElement(
-					'td',
-					null,
-					React.createElement('span', { className: 'glyphicon glyphicon-folder-close', 'aria-hidden': 'true' })
-				),
-				React.createElement(
-					'td',
-					null,
-					React.createElement(
-						'a',
-						{ onClick: this.folderClick.bind(this, elem) },
-						simpleName
-					)
-				),
-				React.createElement(
-					'td',
-					null,
-					React.createElement(
-						'a',
-						{ href: '#', onClick: this.handleDelte.bind(this, { folderName: elem }) },
-						React.createElement('span', { className: 'glyphicon glyphicon-trash' })
-					),
-					React.createElement(
-						'a',
-						{ href: '#', onClick: this.handleEdit.bind(this, { folderName: elem }) },
-						React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
-					),
-					React.createElement(
-						'a',
-						{ href: '#', onClick: this.handleMove.bind(this, { folderName: elem }) },
-						React.createElement('span', { className: 'glyphicon glyphicon-move' })
-					)
-				)
-			);
+			var data = { simpleName: simpleName, folderName: elem };
+			return React.createElement(FolderItem, { handleDelte: this.handleDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
 		}).bind(this));
 		var files = data['files'].map((function (elem, index) {
 			return React.createElement(
@@ -32897,7 +32888,7 @@ var Container = React.createClass({
 					'创建文件夹'
 				)
 			),
-			React.createElement(Modal, { onNewFolder: this.onNewFolder, onToggleForm: this.onToggleForm, folderPath: this.state.path, formDisplayed: this.state.formDisplayed }),
+			React.createElement(Modal, { onModalSubmit: this.onModalSubmit, onToggleForm: this.onToggleForm, folderPath: this.state.path, formDisplayed: this.state.formDisplayed }),
 			React.createElement(
 				'div',
 				{ className: 'row' },
@@ -32942,7 +32933,91 @@ var Container = React.createClass({
 
 module.exports = Container;
 
-},{"./Breadcrumb.js":177,"./Modal.js":180,"react/addons":3}],179:[function(require,module,exports){
+},{"./Breadcrumb.js":177,"./FolderItem.js":179,"./Modal.js":181,"react/addons":3}],179:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Modal = require('./Modal.js');
+var FolderItem = React.createClass({
+	displayName: 'FolderItem',
+
+	getInitialState: function getInitialState() {
+		return {
+			editState: false
+		};
+	},
+	handleDoubleClick: function handleDoubleClick() {
+		this.props.handleDoubleClick(this.props.data.folderName);
+	},
+	handleDelte: function handleDelte() {
+		this.props.handleDelte({ folderName: this.props.data.folderName });
+	},
+	handleEdit: function handleEdit(e) {
+		e.preventDefault();
+		this.setState({
+			editState: !this.state.editState
+		});
+	},
+	onModalSubmit: function onModalSubmit(elem) {
+		this.props.handleMove({ oldFolder: this.props.data.folderName, newFolderName: elem.folderName });
+		this.setState({
+			editState: !this.state.editState
+		});
+	},
+	handleMove: function handleMove() {},
+	render: function render() {
+		var simpleName = this.props.data.simpleName;
+		var folderName = this.props.data.folderName;
+		var editState = this.state.editState;
+		if (editState) {
+			var tpl = React.createElement(Modal, { onModalSubmit: this.onModalSubmit, onToggleForm: this.handleEdit, folderPath: this.props.folderPath, formDisplayed: this.state.editState, folderName: folderName, simpleName: simpleName });
+		} else {
+			var tpl = React.createElement(
+				'a',
+				{ onClick: this.handleClick, onDoubleClick: this.handleDoubleClick },
+				simpleName
+			);
+		}
+		return React.createElement(
+			'tr',
+			null,
+			React.createElement(
+				'td',
+				null,
+				React.createElement('span', { className: 'glyphicon glyphicon-folder-close', 'aria-hidden': 'true' })
+			),
+			React.createElement(
+				'td',
+				null,
+				tpl
+			),
+			React.createElement(
+				'td',
+				null,
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleDelte },
+					React.createElement('span', { className: 'glyphicon glyphicon-trash' })
+				),
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleEdit },
+					React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
+				),
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleMove },
+					React.createElement('span', { className: 'glyphicon glyphicon-move' })
+				)
+			)
+		);
+	}
+
+});
+
+module.exports = FolderItem;
+
+},{"./Modal.js":181,"react":175}],180:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -32965,7 +33040,7 @@ var Header = React.createClass({
 
 module.exports = Header;
 
-},{"react":175}],180:[function(require,module,exports){
+},{"react":175}],181:[function(require,module,exports){
 'use strict';
 
 var React = require('react/addons');
@@ -32987,14 +33062,14 @@ var Modal = React.createClass({
     if (!this.refs.folderName.getDOMNode().value) {
       return;
     }
-    var folderPath = this.props.folderPath.trim();
+    var folderPath = this.props.folderPath;
     console.log(folderPath);
     var prefix = folderPath == '' ? '' : folderPath + '/';
     var newFolder = {
       folderName: prefix + this.refs.folderName.getDOMNode().value
     };
     this.refs.addModal.getDOMNode().reset();
-    this.props.onNewFolder(newFolder);
+    this.props.onModalSubmit(newFolder);
   },
   render: function render() {
     var styleObj = {
@@ -33014,7 +33089,7 @@ var Modal = React.createClass({
             { htmlFor: 'qtitle' },
             '文件夹名'
           ),
-          React.createElement('input', { ref: 'folderName', type: 'text', className: 'form-control', id: 'qtitle', placeholder: '文件夹名' })
+          React.createElement('input', { ref: 'folderName', type: 'text', className: 'form-control', id: 'qtitle', placeholder: this.props.simpleName })
         ),
         React.createElement(
           'button',
@@ -33033,7 +33108,7 @@ var Modal = React.createClass({
 
 module.exports = Modal;
 
-},{"react/addons":3}],181:[function(require,module,exports){
+},{"react/addons":3}],182:[function(require,module,exports){
 'use strict';
 
 var _ = require('underscore');
@@ -33064,4 +33139,4 @@ var Main = React.createClass({
 
 React.render(React.createElement(Main, null), document.getElementsByTagName('body')[0]);
 
-},{"./Container.js":178,"./Header.js":179,"jquery":1,"react":175,"underscore":176}]},{},[181]);
+},{"./Container.js":178,"./Header.js":180,"jquery":1,"react":175,"underscore":176}]},{},[182]);

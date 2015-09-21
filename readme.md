@@ -3,7 +3,7 @@
 #### 项目记录：
 
  - 项目基于PHP框架`Laravel`
- - 前端技术选择`bootstrap`/`jquery`
+ - 前端技术选择`bootstrap`/`react`
  - 使用构建工具`Gulp`打包静态资源
  - 搭建步骤：
 	 - `composer install`
@@ -11,6 +11,12 @@
 	 - `gulp`
  - 添加`helper`函数
 	 - 在`composer.json`配置`autoload`加载`files`
+
+---
+
+#### React开发：
+ - `Laravel`作为后台`api`服务器
+ - `React`使用`Ajax`请求数据，更新state
 
 
 

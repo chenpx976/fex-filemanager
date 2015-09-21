@@ -25,5 +25,6 @@ $router->group(['prefix' => 'api','as'=>'api'], function($router)
 	$router->get('path/{path?}', ['as' => 'getPath', 'uses' => 'FileApiManger@getPath'])->where('path', '(.*)');
 	$router->post('manager/post/directory', ['as' => 'postDirectory', 'uses' => 'FileApiManger@postDirectory']);
 	$router->post('manager/delete/directory', ['as' => 'deleteDirectory', 'uses' => 'FileApiManger@deleteDirectory']);
+	$router->post('manager/put/directory', ['as' => 'putDirectory', 'uses' => 'FileApiManger@putDirectory']);
 
 });

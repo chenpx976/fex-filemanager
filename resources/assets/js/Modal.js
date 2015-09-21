@@ -18,14 +18,14 @@ var Modal = React.createClass({
     if (!this.refs.folderName.getDOMNode().value) {
       return;
     }
-    var folderPath = this.props.folderPath.trim();
+    var folderPath = this.props.folderPath;
     console.log(folderPath);
     var prefix =  (folderPath=='') ? '' : folderPath + '/';
     var newFolder = {
       folderName:  prefix + this.refs.folderName.getDOMNode().value,
     };
     this.refs.addModal.getDOMNode().reset();
-    this.props.onNewFolder(newFolder);
+    this.props.onModalSubmit(newFolder);
   },
   render: function () {
     var styleObj = {
@@ -36,7 +36,7 @@ var Modal = React.createClass({
         <form ref="addModal" name="addFolder" className="clearfix" onSubmit={this.handleForm} >
           <div className="form-group">
             <label htmlFor="qtitle">文件夹名</label>
-            <input ref="folderName" type="text" className="form-control" id="qtitle" placeholder="文件夹名" />
+            <input ref="folderName" type="text" className="form-control" id="qtitle" placeholder={this.props.simpleName} />
           </div>
           <button type="submit" className="btn btn-success pull-right">确认</button>
           <button onClick={this.props.onToggleForm} className="btn btn-default pull-right">取消</button>

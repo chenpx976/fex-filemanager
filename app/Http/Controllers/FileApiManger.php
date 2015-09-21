@@ -30,8 +30,14 @@ class FileApiManger extends Controller
     }
     public function deleteDirectory(Request $request)
     {
-        $createFloder = Storage::deleteDirectory($request->input('folderName'));
-        $responseMsg = ['status'=>$createFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
+        $deleteFloder = Storage::deleteDirectory($request->input('folderName'));
+        $responseMsg = ['status'=>$deleteFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
+        return response()->json($responseMsg);
+    }
+    public function putDirectory(Request $request)
+    {
+        $moveFloder = Storage::move($request->input('oldFolder'),$request->input('newFolderName'));
+        $responseMsg = ['status'=>$moveFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('newFolderName')];
         return response()->json($responseMsg);
     }
     /**
