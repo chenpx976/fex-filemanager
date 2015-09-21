@@ -22,6 +22,18 @@ class FileApiManger extends Controller
         $links = showCurrentLinks($path);
         return response()->json(compact('data', 'path', 'links'));
     }
+    public function postDirectory(Request $request)
+    {
+        $createFloder = Storage::makeDirectory($request->input('folderName'));
+        $responseMsg = ['status'=>$createFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
+        return response()->json($responseMsg);
+    }
+    public function deleteDirectory(Request $request)
+    {
+        $createFloder = Storage::deleteDirectory($request->input('folderName'));
+        $responseMsg = ['status'=>$createFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
+        return response()->json($responseMsg);
+    }
     /**
      * Display a listing of the resource.
      *

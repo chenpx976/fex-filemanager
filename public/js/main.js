@@ -32637,12 +32637,22 @@ var Breadcrumb = React.createClass({
 		this.props.handleClick(elem);
 	},
 	render: function render() {
-		var links = this.props.links.map((function (elem, index) {
-			return React.createElement(
-				"li",
-				{ onClick: this.handleClick.bind(this, elem), className: "" },
-				elem
-			);
+		var links = this.props.links;
+		var olLi = links.map((function (elem, index) {
+			// var simpleName = elem.split('/').pop();
+			if (index < links.length - 1) {
+				return React.createElement(
+					"li",
+					{ onClick: this.handleClick.bind(this, elem), className: "" },
+					elem
+				);
+			} else {
+				return React.createElement(
+					"li",
+					{ className: "active" },
+					elem
+				);
+			}
 		}).bind(this));
 		return React.createElement(
 			"div",
@@ -32655,12 +32665,12 @@ var Breadcrumb = React.createClass({
 					null,
 					React.createElement(
 						"a",
-						{ href: "" },
+						{ onClick: this.handleClick.bind(this, '') },
 						React.createElement("span", { className: "glyphicon glyphicon-home" }),
 						"Home"
 					)
 				),
-				links
+				olLi
 			)
 		);
 	}
@@ -32674,6 +32684,7 @@ module.exports = Breadcrumb;
 
 var React = require('react/addons');
 var Breadcrumb = require('./Breadcrumb.js');
+var Modal = require('./Modal.js');
 var Container = React.createClass({
 	displayName: 'Container',
 
@@ -32687,54 +32698,100 @@ var Container = React.createClass({
 			path: ''
 		};
 	},
-	updateFloder: function updateFloder() {
-		$.ajax({
-			url: 'api/path/' + this.state.path,
-			dataType: 'json',
-			success: (function (data) {
-				this.setState({
-					data: data.data,
-					links: data.links,
-					path: data.path
-				});
-			}).bind(this),
-			error: (function (xhr, status, err) {
-				console.error(this.state.path, status, err.toString());
-			}).bind(this)
+	onToggleForm: function onToggleForm(e) {
+		e.preventDefault();
+		this.setState({
+			formDisplayed: !this.state.formDisplayed
 		});
 	},
+	onNewFolder: function onNewFolder(elem) {
+		console.log(elem);
+		$.ajax({
+			url: 'api/manager/post/directory',
+			type: 'POST',
+			data: elem
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				datas['directories'].push(elem.folderName);
+				this.setState({
+					data: datas,
+					formDisplayed: !this.state.formDisplayed
+				});
+			};
+		}).bind(this)).fail(function () {
+			console.log("error");
+		}).always(function () {
+			console.log("complete");
+		});
+	},
+	handleDelte: function handleDelte(elem) {
+		console.log(elem);
+		$.ajax({
+			url: 'api/manager/delete/directory',
+			type: 'POST',
+			data: elem
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				var key = datas['directories'].indexOf(elem.folderName);
+				if (key > -1) {
+					datas['directories'].splice(key, 1);
+					this.setState({
+						data: datas
+					});
+				} else {
+					console.log(key, folderName, datas['directories']);
+				}
+			};
+		}).bind(this)).fail(function () {
+			console.log("error");
+		}).always(function () {
+			console.log("complete");
+		});
+	},
+	handleEdit: function handleEdit(elem) {},
+	handleMove: function handleMove(elem) {},
 	componentDidMount: function componentDidMount() {
 		$.ajax({
-			url: 'api/path/' + this.state.path,
+			url: 'api/path/',
 			dataType: 'json',
 			success: (function (data) {
 				this.setState({
 					data: data.data,
+					path: data.path,
 					links: data.links,
-					path: data.path
+					formDisplayed: false
 				});
-			}).bind(this),
-			error: (function (xhr, status, err) {
-				console.error(this.state.path, status, err.toString());
+				console.log("数据已经改变");
 			}).bind(this)
 		});
 	},
-	floderClick: function floderClick(elem) {
-		console.dir(elem);
+	folderClick: function folderClick(elem) {
+		console.dir('点击事件', elem);
 		this.setState({
 			path: elem
 		});
-		this.componentDidMount();
+		$.ajax({
+			url: 'api/path/' + elem,
+			dataType: 'json',
+			success: (function (data) {
+				this.setState({
+					data: data.data,
+					path: data.path,
+					links: data.links
+				});
+				console.log("数据已经改变");
+			}).bind(this)
+		});
 	},
 	render: function render() {
 		var data = this.state.data;
-		// console.log('data:', data);
-		console.log('path', this.state);
-		// $.each(data, function(index, val) {
-
-		// 	console.log(index,val);
-		// });
-		var floders = data['directories'].map((function (elem, index) {
+		console.log('重新renderpath', this.state);
+		var folders = data['directories'].map((function (elem, index) {
+			var simpleName = elem.split('/').pop();
 			return React.createElement(
 				'tr',
 				{ key: index },
@@ -32748,8 +32805,8 @@ var Container = React.createClass({
 					null,
 					React.createElement(
 						'a',
-						{ onClick: this.floderClick.bind(this, elem) },
-						elem
+						{ onClick: this.folderClick.bind(this, elem) },
+						simpleName
 					)
 				),
 				React.createElement(
@@ -32757,17 +32814,17 @@ var Container = React.createClass({
 					null,
 					React.createElement(
 						'a',
-						{ href: '#' },
+						{ href: '#', onClick: this.handleDelte.bind(this, { folderName: elem }) },
 						React.createElement('span', { className: 'glyphicon glyphicon-trash' })
 					),
 					React.createElement(
 						'a',
-						{ href: '#' },
+						{ href: '#', onClick: this.handleEdit.bind(this, { folderName: elem }) },
 						React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
 					),
 					React.createElement(
 						'a',
-						{ href: '#' },
+						{ href: '#', onClick: this.handleMove.bind(this, { folderName: elem }) },
 						React.createElement('span', { className: 'glyphicon glyphicon-move' })
 					)
 				)
@@ -32818,7 +32875,13 @@ var Container = React.createClass({
 		return React.createElement(
 			'div',
 			{ className: 'container' },
-			React.createElement(Breadcrumb, { links: this.state.links, handleClick: this.floderClick }),
+			React.createElement(
+				'h2',
+				{ onChange: this.pathChange },
+				'当前路径',
+				this.state.path
+			),
+			React.createElement(Breadcrumb, { links: this.state.links, handleClick: this.folderClick }),
 			React.createElement(
 				'div',
 				{ className: 'row' },
@@ -32830,11 +32893,12 @@ var Container = React.createClass({
 				),
 				React.createElement(
 					'button',
-					{ type: 'button', 'data-toggle': 'modal', href: '#createFloder', className: 'btn btn-default' },
+					{ type: 'button', onClick: this.onToggleForm, className: 'btn btn-default' },
 					React.createElement('span', { className: 'glyphicon glyphicon-folder-open' }),
 					'创建文件夹'
 				)
 			),
+			React.createElement(Modal, { onNewFolder: this.onNewFolder, onToggleForm: this.onToggleForm, folderPath: this.state.path, formDisplayed: this.state.formDisplayed }),
 			React.createElement(
 				'div',
 				{ className: 'row' },
@@ -32867,7 +32931,7 @@ var Container = React.createClass({
 					React.createElement(
 						'tbody',
 						null,
-						floders,
+						folders,
 						files
 					)
 				)
@@ -32879,7 +32943,7 @@ var Container = React.createClass({
 
 module.exports = Container;
 
-},{"./Breadcrumb.js":177,"react/addons":3}],179:[function(require,module,exports){
+},{"./Breadcrumb.js":177,"./Modal.js":180,"react/addons":3}],179:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -32905,6 +32969,74 @@ module.exports = Header;
 },{"react":175}],180:[function(require,module,exports){
 'use strict';
 
+var React = require('react/addons');
+
+var Modal = React.createClass({
+  displayName: 'Modal',
+
+  mixins: [],
+  getInitialState: function getInitialState() {
+    return {};
+  },
+  getDefaultProps: function getDefaultProps() {},
+  componentWillMount: function componentWillMount() {},
+  componentDidMount: function componentDidMount() {},
+  componentDidUpdate: function componentDidUpdate() {},
+  componentWillUnmount: function componentWillUnmount() {},
+  handleForm: function handleForm(e) {
+    e.preventDefault();
+    if (!this.refs.folderName.getDOMNode().value) {
+      return;
+    }
+    var folderPath = this.props.folderPath.trim();
+    console.log(folderPath);
+    var prefix = folderPath == '' ? '' : folderPath + '/';
+    var newFolder = {
+      folderName: prefix + this.refs.folderName.getDOMNode().value
+    };
+    this.refs.addModal.getDOMNode().reset();
+    this.props.onNewFolder(newFolder);
+  },
+  render: function render() {
+    var styleObj = {
+      display: this.props.formDisplayed ? 'block' : 'none'
+    };
+    return React.createElement(
+      'div',
+      { className: 'Modal', style: styleObj },
+      React.createElement(
+        'form',
+        { ref: 'addModal', name: 'addFolder', className: 'clearfix', onSubmit: this.handleForm },
+        React.createElement(
+          'div',
+          { className: 'form-group' },
+          React.createElement(
+            'label',
+            { htmlFor: 'qtitle' },
+            '文件夹名'
+          ),
+          React.createElement('input', { ref: 'folderName', type: 'text', className: 'form-control', id: 'qtitle', placeholder: '文件夹名' })
+        ),
+        React.createElement(
+          'button',
+          { type: 'submit', className: 'btn btn-success pull-right' },
+          '确认'
+        ),
+        React.createElement(
+          'button',
+          { onClick: this.props.onToggleForm, className: 'btn btn-default pull-right' },
+          '取消'
+        )
+      )
+    );
+  }
+});
+
+module.exports = Modal;
+
+},{"react/addons":3}],181:[function(require,module,exports){
+'use strict';
+
 var _ = require('underscore');
 window.$ = window.jQuery = require('jquery');
 $.ajaxSetup({
@@ -32915,7 +33047,6 @@ $.ajaxSetup({
 var React = require('react');
 var Header = require('./Header.js');
 var Container = require('./Container.js');
-console.log(React);
 var React = require('react');
 
 var Main = React.createClass({
@@ -32934,4 +33065,4 @@ var Main = React.createClass({
 
 React.render(React.createElement(Main, null), document.getElementsByTagName('body')[0]);
 
-},{"./Container.js":178,"./Header.js":179,"jquery":1,"react":175,"underscore":176}]},{},[180]);
+},{"./Container.js":178,"./Header.js":179,"jquery":1,"react":175,"underscore":176}]},{},[181]);

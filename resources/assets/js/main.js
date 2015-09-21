@@ -8,7 +8,6 @@ $.ajaxSetup({
 var React = require('react');
 var Header = require('./Header.js');
 var Container = require('./Container.js');
-console.log(React);
 var React = require('react');
 
 var Main = React.createClass({
