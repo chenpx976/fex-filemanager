@@ -32627,50 +32627,55 @@ module.exports = require('./lib/React');
 }.call(this));
 
 },{}],177:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var React = require('react/addons');
 var Breadcrumb = React.createClass({
-	displayName: "Breadcrumb",
+	displayName: 'Breadcrumb',
 
 	handleClick: function handleClick(elem) {
 		this.props.handleClick(elem);
 	},
 	render: function render() {
-		var links = this.props.links;
-		var olLi = links.map((function (elem, index) {
-			// var simpleName = elem.split('/').pop();
-			if (index < links.length - 1) {
-				return React.createElement(
-					"li",
-					{ onClick: this.handleClick.bind(this, elem), className: "" },
-					elem
-				);
-			} else {
-				return React.createElement(
-					"li",
-					{ className: "active" },
-					elem
-				);
+		var path = this.props.path;
+		var currentLink = "";
+		var paths = path.split('/').map((function (elem, index) {
+			if (elem === '') {
+				return false;
 			}
+			currentLink += '/' + elem;
+			return React.createElement(
+				'li',
+				{ onClick: this.handleClick.bind(this, currentLink), className: '' },
+				elem
+			);
 		}).bind(this));
+		// var links = this.props.links;
+		// var olLi = links.map(function(elem, index) {
+		// 	// var simpleName = elem.split('/').pop();
+		// 	if (index< links.length - 1) {
+		// 		return <li onClick={this.handleClick.bind(this, elem)} className="">{elem}</li>;
+		// 	}else {
+		// 		return <li className="active" >{elem}</li>;
+		// 	}
+		// }.bind(this));
 		return React.createElement(
-			"div",
-			{ className: "row" },
+			'div',
+			{ className: 'row' },
 			React.createElement(
-				"ol",
-				{ className: "breadcrumb" },
+				'ol',
+				{ className: 'breadcrumb' },
 				React.createElement(
-					"li",
+					'li',
 					null,
 					React.createElement(
-						"a",
+						'a',
 						{ onClick: this.handleClick.bind(this, '') },
-						React.createElement("span", { className: "glyphicon glyphicon-home" }),
-						"Home"
+						React.createElement('span', { className: 'glyphicon glyphicon-home' }),
+						'Home'
 					)
 				),
-				olLi
+				paths
 			)
 		);
 	}
@@ -32875,13 +32880,7 @@ var Container = React.createClass({
 		return React.createElement(
 			'div',
 			{ className: 'container' },
-			React.createElement(
-				'h2',
-				{ onChange: this.pathChange },
-				'当前路径',
-				this.state.path
-			),
-			React.createElement(Breadcrumb, { links: this.state.links, handleClick: this.folderClick }),
+			React.createElement(Breadcrumb, { links: this.state.links, path: this.state.path, handleClick: this.folderClick }),
 			React.createElement(
 				'div',
 				{ className: 'row' },

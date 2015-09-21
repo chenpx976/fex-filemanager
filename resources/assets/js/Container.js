@@ -144,8 +144,7 @@ var Container = React.createClass({
 		// });
 		return (
 			<div className="container">
-				<h2 onChange={this.pathChange}>当前路径{this.state.path}</h2>
-				<Breadcrumb links={this.state.links} handleClick={this.folderClick} />
+				<Breadcrumb links={this.state.links} path={this.state.path} handleClick={this.folderClick} />
 				<div className="row">
 						<button type="button" className="btn btn-default"><span className="glyphicon glyphicon-cloud-upload"></span>上传</button>
 						<button type="button" onClick={this.onToggleForm} className="btn btn-default"><span className="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
