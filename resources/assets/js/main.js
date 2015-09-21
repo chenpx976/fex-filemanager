@@ -8,11 +8,37 @@ $(function() {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
     }
   });
-
-  function createFloder() {
-  	$('#createFloder form').submit(function(event) {
-  		event.preventDefault();
-
-  	});
+  function insertFloder (floderName) {
+    var mainData = $('#mainData');
+    var tpl = $('#tpl').html();
+    var context = {floderName:floderName};
+    var html = _.template(tpl)(context);
+    mainData.prepend(html);
   }
+  function createFloder() {
+
+        $( "form" ).on( "submit", function( event ) {
+          event.preventDefault();
+
+          var formData = $( this ).serialize();
+          $.ajax({
+            url: '/manager/post/directory',
+            type: 'POST',
+            data: formData,
+          })
+          .done(function(data) {
+            console.log("success:", data);
+            if (data.status) {
+              insertFloder(data.floderName);
+            };
+          })
+          .fail(function() {
+            console.log("error");
+          })
+          .always(function() {
+            console.log("complete");
+          });
+        });
+  }
+  createFloder();
 })

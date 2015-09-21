@@ -11,7 +11,16 @@
 	 - `gulp`
  - 添加`helper`函数
 	 - 在`composer.json`配置`autoload`加载`files`
+ - 尝试使用React
+	 - ajax请求数据后更新`state`
 
+```javascript
+this.setState({
+	data: data.data,
+	links: data.links,
+	path: data.path
+});
+```
 
 
 #### 项目要求：

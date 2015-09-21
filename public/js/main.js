@@ -13145,12 +13145,36 @@ $(function () {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
     }
   });
-
+  function insertFloder(floderName) {
+    var mainData = $('#mainData');
+    var tpl = $('#tpl').html();
+    var context = { floderName: floderName };
+    var html = _.template(tpl)(context);
+    mainData.prepend(html);
+  }
   function createFloder() {
-    $('#createFloder form').submit(function (event) {
+
+    $("form").on("submit", function (event) {
       event.preventDefault();
+
+      var formData = $(this).serialize();
+      $.ajax({
+        url: '/manager/post/directory',
+        type: 'POST',
+        data: formData
+      }).done(function (data) {
+        console.log("success:", data);
+        if (data.status) {
+          insertFloder(data.floderName);
+        };
+      }).fail(function () {
+        console.log("error");
+      }).always(function () {
+        console.log("complete");
+      });
     });
   }
+  createFloder();
 });
 
 },{"../../../node_modules/bootstrap/dist/js/npm.js":1,"jquery":14,"underscore":15}]},{},[16]);

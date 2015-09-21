@@ -8,8 +8,8 @@
 			<li>
 				<a href="{{ route('home') }}"><span class="glyphicon glyphicon-home"></span>Home</a>
 			</li>
-			@foreach ($paths as $index => $element)
-			@if ($index<count($paths) - 1)
+			@foreach ($links as $index => $element)
+			@if ($index<count($links) - 1)
 				<li>
 					<a href="{{ route('getPath', $element) }}">{{ showFileName($element) }}</a>
 				</li>
@@ -32,11 +32,11 @@
 					<th>action</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="mainData">
 			@foreach ($data['directories'] as $directory)
 				<tr>
 					<td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></i></td>
-					<td><a href="{{ route('getPath', $directory) }}">{{ showFileName($directory) }}</a></td>
+					<td><a class="floderName" href="path/{{ $directory }}">{{ showFileName($directory) }}</a></td>
 					<td>
 						<a href="{{ route('deleteFile', $directory) }}"><span class="glyphicon glyphicon-trash"></span></a>
 						<a href="{{ route('putDirectory', $directory) }}"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -47,7 +47,7 @@
 			@foreach ($data['files'] as $file)
 				<tr>
 					<td><span class="glyphicon glyphicon-file"></span></td>
-					<td><a href="{{ route('getFile', $file) }}">{{ $file }}</a></td>
+					<td><a fileName href="{{ route('getFile', $file) }}">{{ $file }}</a></td>
 					<td>
 					<a href="{{ route('deleteFile', $directory) }}"><span class="glyphicon glyphicon-trash"></span></a>
 					<a href="{{ route('putFile', $directory) }}"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -69,7 +69,7 @@
 				<h4 class="modal-title">创建文件夹</h4>
 			</div>
 			<div class="modal-body">
-				<form action="{{ route('postDirectory') }}" method="POST" role="form">
+				<form action="{{ route('postDirectory') }}" id="fileForm" method="POST" role="form">
 					{!! csrf_field() !!}
 					<div class="form-group">
 						<label for="">文件夹名称</label>
@@ -82,4 +82,16 @@
 	</div>
 </div>
 
+<script type="text/template" id="tpl">
+    	<tr>
+    		<td><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span></i></td>
+    		<td><a class="floderName" href="path/<%= floderName %>"><%= floderName %></a></td>
+    		<td>
+    			<a href="#"><span class="glyphicon glyphicon-trash"></span></a>
+    			<a href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+    			<a href=""><span class="glyphicon glyphicon-move"></span></a>
+    		</td>
+    	</tr>
+
+</script>
 @stop

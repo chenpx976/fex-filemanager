@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use \Storage;
-use \File;
 
 class FileManger extends Controller {
 	// var_dump(Storage::allFiles('./'));
@@ -40,17 +40,19 @@ class FileManger extends Controller {
 	}
 	public function getPath($path = '') {
 		$data = $this->pathFile($path);
-		$paths = showCurrentLinks($path);
-		return view('filemanager.home',compact('data','paths'));
+		$links = showCurrentLinks($path);
+		return view('filemanager.home',compact('data','links'));
 	}
 	public function getFile($file)
 	{
 		$data = Storage::get($file);
 		return $data;
 	}
-	public function postDirectory()
+	public function postDirectory(Request $request)
 	{
-		return response()->json($request->all());
+		$createFloder = Storage::makeDirectory($request->input('folderName'));
+		$responseMsg = ['status'=>$createFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
+		return response()->json($responseMsg);
 	}
 	public function putDirectory() {
 		return "putDirectory";
@@ -61,7 +63,7 @@ class FileManger extends Controller {
 	public function moveFile() {
 		return "moveFile";
 	}
-	public function deleteFile() {
+	public function deleteFile(Request $request) {
 		return "deleteFile";
 	}
 	/**
