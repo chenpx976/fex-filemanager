@@ -32691,6 +32691,8 @@ var React = require('react/addons');
 var Breadcrumb = require('./Breadcrumb.js');
 var Modal = require('./Modal.js');
 var FolderItem = require('./FolderItem.js');
+var FileItem = require('./FileItem.js');
+var Upload = require('./Upload.js');
 var Container = React.createClass({
 	displayName: 'Container',
 
@@ -32732,7 +32734,7 @@ var Container = React.createClass({
 			console.log("complete");
 		});
 	},
-	handleDelte: function handleDelte(elem) {
+	handleFolderDelte: function handleFolderDelte(elem) {
 		console.log(elem);
 		$.ajax({
 			url: 'api/manager/delete/directory',
@@ -32752,11 +32754,29 @@ var Container = React.createClass({
 					console.log(key, folderName, datas['directories']);
 				}
 			};
-		}).bind(this)).fail(function () {
-			console.log("error");
-		}).always(function () {
-			console.log("complete");
-		});
+		}).bind(this));
+	},
+	handleFileDelte: function handleFileDelte(elem) {
+		console.log(elem);
+		$.ajax({
+			url: 'api/manager/delete/file',
+			type: 'POST',
+			data: elem
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				var key = datas['files'].indexOf(elem.fileName);
+				if (key > -1) {
+					datas['files'].splice(key, 1);
+					this.setState({
+						data: datas
+					});
+				} else {
+					console.log(key, fileName, datas['directories']);
+				}
+			};
+		}).bind(this));
 	},
 	handleEdit: function handleEdit(elem) {},
 	handleMove: function handleMove(elem) {
@@ -32818,52 +32838,37 @@ var Container = React.createClass({
 			}).bind(this)
 		});
 	},
+	onUpload: function onUpload(fd) {
+		fd.append('path', this.state.path);
+		$.ajax({
+			url: 'api/manager/post/file',
+			type: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				datas['files'].push(dataJson.fileName);
+				this.setState({
+					data: datas
+				});
+			};
+		}).bind(this));
+	},
 	render: function render() {
 		var data = this.state.data;
 		console.log('重新renderpath', this.state);
 		var folders = data['directories'].map((function (elem, index) {
 			var simpleName = elem.split('/').pop();
 			var data = { simpleName: simpleName, folderName: elem };
-			return React.createElement(FolderItem, { handleDelte: this.handleDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
+			return React.createElement(FolderItem, { handleDelte: this.handleFolderDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
 		}).bind(this));
 		var files = data['files'].map((function (elem, index) {
-			return React.createElement(
-				'tr',
-				{ key: index },
-				React.createElement(
-					'td',
-					null,
-					React.createElement('span', { className: 'glyphicon glyphicon-file', 'aria-hidden': 'true' })
-				),
-				React.createElement(
-					'td',
-					null,
-					React.createElement(
-						'a',
-						{ href: '#' },
-						elem
-					)
-				),
-				React.createElement(
-					'td',
-					null,
-					React.createElement(
-						'a',
-						{ href: '#' },
-						React.createElement('span', { className: 'glyphicon glyphicon-trash' })
-					),
-					React.createElement(
-						'a',
-						{ href: '#' },
-						React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
-					),
-					React.createElement(
-						'a',
-						{ href: '#' },
-						React.createElement('span', { className: 'glyphicon glyphicon-move' })
-					)
-				)
-			);
+			var simpleName = elem.split('/').pop();
+			var data = { simpleName: simpleName, fileName: elem };
+			return React.createElement(FileItem, { handleDelte: this.handleFileDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
 		}).bind(this));
 		// var tableData = data.each(function(index, el) {
 		// 	console.log(index, el);
@@ -32875,12 +32880,7 @@ var Container = React.createClass({
 			React.createElement(
 				'div',
 				{ className: 'row' },
-				React.createElement(
-					'button',
-					{ type: 'button', className: 'btn btn-default' },
-					React.createElement('span', { className: 'glyphicon glyphicon-cloud-upload' }),
-					'上传'
-				),
+				React.createElement(Upload, { handleUpload: this.onUpload }),
 				React.createElement(
 					'button',
 					{ type: 'button', onClick: this.onToggleForm, className: 'btn btn-default' },
@@ -32933,7 +32933,91 @@ var Container = React.createClass({
 
 module.exports = Container;
 
-},{"./Breadcrumb.js":177,"./FolderItem.js":179,"./Modal.js":181,"react/addons":3}],179:[function(require,module,exports){
+},{"./Breadcrumb.js":177,"./FileItem.js":179,"./FolderItem.js":180,"./Modal.js":182,"./Upload.js":183,"react/addons":3}],179:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Modal = require('./Modal.js');
+var FileItem = React.createClass({
+	displayName: 'FileItem',
+
+	getInitialState: function getInitialState() {
+		return {
+			editState: false
+		};
+	},
+	handleDoubleClick: function handleDoubleClick() {
+		this.props.handleDoubleClick(this.props.data.fileName);
+	},
+	handleDelte: function handleDelte() {
+		this.props.handleDelte({ fileName: this.props.data.fileName });
+	},
+	handleEdit: function handleEdit(e) {
+		e.preventDefault();
+		this.setState({
+			editState: !this.state.editState
+		});
+	},
+	onModalSubmit: function onModalSubmit(elem) {
+		this.props.handleMove({ oldFile: this.props.data.fileName, newFileName: elem.fileName });
+		this.setState({
+			editState: !this.state.editState
+		});
+	},
+	handleMove: function handleMove() {},
+	render: function render() {
+		var simpleName = this.props.data.simpleName;
+		var fileName = this.props.data.fileName;
+		var editState = this.state.editState;
+		if (editState) {
+			var tpl = React.createElement(Modal, { onModalSubmit: this.onModalSubmit, onToggleForm: this.handleEdit, filePath: this.props.filePath, formDisplayed: this.state.editState, fileName: fileName, simpleName: simpleName });
+		} else {
+			var tpl = React.createElement(
+				'a',
+				{ onClick: this.handleClick, onDoubleClick: this.handleDoubleClick },
+				simpleName
+			);
+		}
+		return React.createElement(
+			'tr',
+			null,
+			React.createElement(
+				'td',
+				null,
+				React.createElement('span', { className: 'glyphicon glyphicon-file', 'aria-hidden': 'true' })
+			),
+			React.createElement(
+				'td',
+				null,
+				tpl
+			),
+			React.createElement(
+				'td',
+				null,
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleDelte },
+					React.createElement('span', { className: 'glyphicon glyphicon-trash' })
+				),
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleEdit },
+					React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
+				),
+				React.createElement(
+					'a',
+					{ href: '#', onClick: this.handleMove },
+					React.createElement('span', { className: 'glyphicon glyphicon-move' })
+				)
+			)
+		);
+	}
+
+});
+
+module.exports = FileItem;
+
+},{"./Modal.js":182,"react":175}],180:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -33017,7 +33101,7 @@ var FolderItem = React.createClass({
 
 module.exports = FolderItem;
 
-},{"./Modal.js":181,"react":175}],180:[function(require,module,exports){
+},{"./Modal.js":182,"react":175}],181:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -33040,7 +33124,7 @@ var Header = React.createClass({
 
 module.exports = Header;
 
-},{"react":175}],181:[function(require,module,exports){
+},{"react":175}],182:[function(require,module,exports){
 'use strict';
 
 var React = require('react/addons');
@@ -33108,7 +33192,52 @@ var Modal = React.createClass({
 
 module.exports = Modal;
 
-},{"react/addons":3}],182:[function(require,module,exports){
+},{"react/addons":3}],183:[function(require,module,exports){
+'use strict';
+
+var $ = require('jquery');
+var React = require('react');
+var Upload = React.createClass({
+	displayName: 'Upload',
+
+	getInitialState: function getInitialState() {
+		return {
+			data_uri: null
+		};
+	},
+	handleSubmit: function handleSubmit(event) {
+		event.preventDefault();
+	},
+	handleFile: function handleFile(e) {
+		var files = e.target.files[0];
+		var fd = new FormData();
+		fd.append('file', this.refs.file.getDOMNode().files[0]);
+		console.log(FormData);
+		this.refs.Upload.getDOMNode().reset();
+		this.props.handleUpload(fd);
+	},
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ className: 'Upload' },
+			React.createElement(
+				'form',
+				{ ref: 'Upload', onSubmit: this.handleSubmit, encType: 'multipart/form-data', name: 'Upload' },
+				React.createElement(
+					'input',
+					{ type: 'file', ref: 'file', onChange: this.handleFile, className: 'btn btn-default' },
+					React.createElement('span', { className: 'glyphicon glyphicon-cloud-upload' }),
+					'上传'
+				)
+			)
+		);
+	}
+
+});
+
+module.exports = Upload;
+
+},{"jquery":1,"react":175}],184:[function(require,module,exports){
 'use strict';
 
 var _ = require('underscore');
@@ -33139,4 +33268,4 @@ var Main = React.createClass({
 
 React.render(React.createElement(Main, null), document.getElementsByTagName('body')[0]);
 
-},{"./Container.js":178,"./Header.js":180,"jquery":1,"react":175,"underscore":176}]},{},[182]);
+},{"./Container.js":178,"./Header.js":181,"jquery":1,"react":175,"underscore":176}]},{},[184]);

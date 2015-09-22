@@ -31,7 +31,7 @@
 					<td><a href="{{ route('getFile', $file) }}">{{ $file }}</a></td>
 					<td>
 					<a href="{{ route('deleteFile', $directory) }}"><span class="glyphicon glyphicon-trash"></span></a>
-					<a href="{{ route('putFile', $directory) }}"><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href=""><span class="glyphicon glyphicon-pencil"></span></a>
 					<a href="{{ route('moveFile', $directory) }}"><span class="glyphicon glyphicon-move"></span></a>
 					</td>
 				</tr>

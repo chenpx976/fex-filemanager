@@ -2,6 +2,8 @@ var React = require('react/addons');
 var Breadcrumb = require('./Breadcrumb.js');
 var Modal = require('./Modal.js');
 var FolderItem = require('./FolderItem.js');
+var FileItem = require('./FileItem.js');
+var Upload = require('./Upload.js');
 var Container = React.createClass({
 	getInitialState: function() {
 	  return {
@@ -45,7 +47,7 @@ var Container = React.createClass({
 		    console.log("complete");
 		  });
 	},
-	handleDelte: function (elem) {
+	handleFolderDelte: function (elem) {
 		console.log(elem);
 		$.ajax({
 		  url: 'api/manager/delete/directory',
@@ -67,13 +69,31 @@ var Container = React.createClass({
 
 		  	}
 		  };
-		}.bind(this))
-		.fail(function() {
-		  console.log("error");
+		}.bind(this));
+	},
+	handleFileDelte: function (elem) {
+		console.log(elem);
+		$.ajax({
+		  url: 'api/manager/delete/file',
+		  type: 'POST',
+		  data: elem,
 		})
-		.always(function() {
-		  console.log("complete");
-		});
+		.done(function(dataJson) {
+		  console.log("success:", dataJson);
+		  if (dataJson.status) {
+		  	var datas = this.state.data;
+		  	var key = datas['files'].indexOf(elem.fileName);
+		  	if (key > -1) {
+		  		datas['files'].splice(key,1);
+		  		this.setState({
+		  			data: datas
+		  		});
+		  	}else{
+		  		console.log(key,fileName,datas['directories']);
+
+		  	}
+		  };
+		}.bind(this));
 	},
 	handleEdit: function (elem) {
 
@@ -141,24 +161,39 @@ var Container = React.createClass({
 		  }.bind(this)
 		});
 	},
+	onUpload: function (fd) {
+		fd.append('path',this.state.path);
+		$.ajax({
+		  url: 'api/manager/post/file',
+		  type: 'POST',
+		  data: fd,
+		  processData: false,
+		  contentType: false,
+		})
+		.done(function(dataJson) {
+		  console.log("success:", dataJson);
+		  if (dataJson.status) {
+		  	var datas = this.state.data;
+		  	datas['files'].push(dataJson.fileName);
+		  	this.setState({
+		  		data: datas
+		  	});
+
+		  };
+		}.bind(this));
+	},
 	render: function() {
 		var data = this.state.data;
 		console.log('重新renderpath', this.state)
 		var folders = data['directories'].map(function(elem,index) {
 			var simpleName = elem.split('/').pop();
 			var data = {simpleName:simpleName,folderName:elem};
-			return <FolderItem handleDelte={this.handleDelte} handleMove={this.handleMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
+			return <FolderItem handleDelte={this.handleFolderDelte} handleMove={this.handleMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
 		}.bind(this));
 		var files = data['files'].map(function(elem,index) {
-			return <tr key={index}>
-				<td><span className="glyphicon glyphicon-file" aria-hidden="true"></span></td>
-				<td><a href="#">{elem}</a></td>
-				<td>
-					<a href="#"><span className="glyphicon glyphicon-trash"></span></a>
-					<a href="#"><span className="glyphicon glyphicon-pencil"></span></a>
-					<a href="#"><span className="glyphicon glyphicon-move"></span></a>
-				</td>
-			</tr>
+			var simpleName = elem.split('/').pop();
+			var data = {simpleName:simpleName,fileName:elem};
+			return <FileItem handleDelte={this.handleFileDelte} handleMove={this.handleMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
 		}.bind(this));
 		// var tableData = data.each(function(index, el) {
 		// 	console.log(index, el);
@@ -167,7 +202,7 @@ var Container = React.createClass({
 			<div className="container">
 				<Breadcrumb links={this.state.links} path={this.state.path} handleClick={this.folderClick} />
 				<div className="row">
-						<button type="button" className="btn btn-default"><span className="glyphicon glyphicon-cloud-upload"></span>上传</button>
+						<Upload handleUpload={this.onUpload}  />
 						<button type="button" onClick={this.onToggleForm} className="btn btn-default"><span className="glyphicon glyphicon-folder-open"></span>创建文件夹</button>
 				</div>
 				<Modal onModalSubmit={this.onModalSubmit} onToggleForm={this.onToggleForm} folderPath={this.state.path} formDisplayed={this.state.formDisplayed} />

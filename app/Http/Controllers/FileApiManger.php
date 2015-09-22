@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Storage;
+use File;
 class FileApiManger extends Controller
 {
     public function pathFile($path)
@@ -40,6 +41,22 @@ class FileApiManger extends Controller
         $responseMsg = ['status'=>$moveFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('newFolderName')];
         return response()->json($responseMsg);
     }
+    public function postFile(Request $request)
+    {
+        $destinationPath = storage_path().'/app/'.$request->input('path');
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        $fileUpload = $request->file('file')->move($destinationPath, $fileName);
+        $responseMsg = ['status'=>true,'time'=>date('Y-m-d H:i:s'),'fileName'=>$request->input('path').'/'.$fileName];
+        return response()->json($responseMsg);
+    }
+    public function deleteFile(Request $request)
+    {
+        $deleteFile = Storage::delete($request->input('fileName'));
+        $responseMsg = ['status'=>$deleteFile,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('fileName')];
+        return response()->json($responseMsg);
+    }
+
     /**
      * Display a listing of the resource.
      *

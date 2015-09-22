@@ -6700,5 +6700,8 @@ tbody a,
 .breadcrumb a {
   cursor: pointer;
 }
+.Upload {
+  display: inline-block;
+}
 
 /*# sourceMappingURL=app.css.map */
