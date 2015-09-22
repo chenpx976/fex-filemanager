@@ -32950,11 +32950,12 @@ var Container = React.createClass({
 
 module.exports = Container;
 
-},{"./Breadcrumb.js":177,"./FileItem.js":179,"./FolderItem.js":180,"./Modal.js":182,"./Upload.js":183,"react/addons":3}],179:[function(require,module,exports){
+},{"./Breadcrumb.js":177,"./FileItem.js":179,"./FolderItem.js":180,"./Modal.js":183,"./Upload.js":184,"react/addons":3}],179:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Modal = require('./Modal.js');
+var ItemAction = require('./ItemAction.js');
 var FileItem = React.createClass({
 	displayName: 'FileItem',
 
@@ -32964,7 +32965,7 @@ var FileItem = React.createClass({
 		};
 	},
 	handleDoubleClick: function handleDoubleClick() {
-		this.props.handleDoubleClick(this.props.data.fileName);
+		// this.props.handleDoubleClick(this.props.data.fileName);
 	},
 	handleDelte: function handleDelte() {
 		this.props.handleDelte({ fileName: this.props.data.fileName });
@@ -33010,21 +33011,7 @@ var FileItem = React.createClass({
 			React.createElement(
 				'td',
 				null,
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleDelte },
-					React.createElement('span', { className: 'glyphicon glyphicon-trash' })
-				),
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleEdit },
-					React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
-				),
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleMove },
-					React.createElement('span', { className: 'glyphicon glyphicon-move' })
-				)
+				React.createElement(ItemAction, { handleDelte: this.handleDelte, handleEdit: this.handleEdit })
 			)
 		);
 	}
@@ -33033,11 +33020,12 @@ var FileItem = React.createClass({
 
 module.exports = FileItem;
 
-},{"./Modal.js":182,"react":175}],180:[function(require,module,exports){
+},{"./ItemAction.js":182,"./Modal.js":183,"react":175}],180:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var Modal = require('./Modal.js');
+var ItemAction = require('./ItemAction.js');
 var FolderItem = React.createClass({
 	displayName: 'FolderItem',
 
@@ -33094,21 +33082,7 @@ var FolderItem = React.createClass({
 			React.createElement(
 				'td',
 				null,
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleDelte },
-					React.createElement('span', { className: 'glyphicon glyphicon-trash' })
-				),
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleEdit },
-					React.createElement('span', { className: 'glyphicon glyphicon-pencil' })
-				),
-				React.createElement(
-					'a',
-					{ href: '#', onClick: this.handleMove },
-					React.createElement('span', { className: 'glyphicon glyphicon-move' })
-				)
+				React.createElement(ItemAction, { handleDelte: this.handleDelte, handleEdit: this.handleEdit })
 			)
 		);
 	}
@@ -33117,7 +33091,7 @@ var FolderItem = React.createClass({
 
 module.exports = FolderItem;
 
-},{"./Modal.js":182,"react":175}],181:[function(require,module,exports){
+},{"./ItemAction.js":182,"./Modal.js":183,"react":175}],181:[function(require,module,exports){
 'use strict';
 var React = require('react');
 
@@ -33141,6 +33115,35 @@ var Header = React.createClass({
 module.exports = Header;
 
 },{"react":175}],182:[function(require,module,exports){
+"use strict";
+
+var React = require('react');
+
+var ItemAction = React.createClass({
+	displayName: "ItemAction",
+
+	render: function render() {
+		return React.createElement(
+			"div",
+			{ className: "ItemAction" },
+			React.createElement(
+				"a",
+				{ href: "#", onClick: this.props.handleDelte },
+				React.createElement("span", { className: "glyphicon glyphicon-trash" })
+			),
+			React.createElement(
+				"a",
+				{ href: "#", onClick: this.props.handleEdit },
+				React.createElement("span", { className: "glyphicon glyphicon-pencil" })
+			)
+		);
+	}
+
+});
+
+module.exports = ItemAction;
+
+},{"react":175}],183:[function(require,module,exports){
 'use strict';
 
 var React = require('react/addons');
@@ -33208,7 +33211,7 @@ var Modal = React.createClass({
 
 module.exports = Modal;
 
-},{"react/addons":3}],183:[function(require,module,exports){
+},{"react/addons":3}],184:[function(require,module,exports){
 'use strict';
 
 var $ = require('jquery');
@@ -33253,7 +33256,7 @@ var Upload = React.createClass({
 
 module.exports = Upload;
 
-},{"jquery":1,"react":175}],184:[function(require,module,exports){
+},{"jquery":1,"react":175}],185:[function(require,module,exports){
 'use strict';
 
 var _ = require('underscore');
@@ -33284,4 +33287,4 @@ var Main = React.createClass({
 
 React.render(React.createElement(Main, null), document.getElementsByTagName('body')[0]);
 
-},{"./Container.js":178,"./Header.js":181,"jquery":1,"react":175,"underscore":176}]},{},[184]);
+},{"./Container.js":178,"./Header.js":181,"jquery":1,"react":175,"underscore":176}]},{},[185]);

@@ -25,7 +25,7 @@ class FileApiManger extends Controller
     }
     public function postDirectory(Request $request)
     {
-        $createFloder = Storage::makeDirectory($request->input('folderName'));
+        $createFloder = Storage::makeDirectory(trim($request->input('folderName')));
         $responseMsg = ['status'=>$createFloder,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('folderName')];
         return response()->json($responseMsg);
     }

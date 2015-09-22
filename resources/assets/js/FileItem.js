@@ -1,5 +1,6 @@
 var React = require('react');
 var Modal = require('./Modal.js');
+var ItemAction = require('./ItemAction.js');
 var FileItem = React.createClass({
 	getInitialState: function() {
 		return {
@@ -7,7 +8,7 @@ var FileItem = React.createClass({
 		};
 	},
 	handleDoubleClick: function () {
-		this.props.handleDoubleClick(this.props.data.fileName);
+		// this.props.handleDoubleClick(this.props.data.fileName);
 	},
 	handleDelte: function () {
 		this.props.handleDelte({fileName:this.props.data.fileName});
@@ -38,9 +39,7 @@ var FileItem = React.createClass({
 							<td><span className="glyphicon glyphicon-file" aria-hidden="true"></span></td>
 							<td>{tpl}</td>
 							<td>
-								<a href="#" onClick={this.handleDelte} ><span className="glyphicon glyphicon-trash"></span></a>
-								<a href="#" onClick={this.handleEdit}><span className="glyphicon glyphicon-pencil"></span></a>
-								<a href="#" onClick={this.handleMove}><span className="glyphicon glyphicon-move"></span></a>
+								<ItemAction handleDelte={this.handleDelte} handleEdit={this.handleEdit} />
 							</td>
 			</tr>
 

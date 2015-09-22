@@ -1,5 +1,6 @@
 var React = require('react');
 var Modal = require('./Modal.js');
+var ItemAction = require('./ItemAction.js');
 var FolderItem = React.createClass({
 	getInitialState: function() {
 		return {
@@ -41,9 +42,7 @@ var FolderItem = React.createClass({
 							<td><span className="glyphicon glyphicon-folder-close" aria-hidden="true"></span></td>
 							<td>{tpl}</td>
 							<td>
-								<a href="#" onClick={this.handleDelte} ><span className="glyphicon glyphicon-trash"></span></a>
-								<a href="#" onClick={this.handleEdit}><span className="glyphicon glyphicon-pencil"></span></a>
-								<a href="#" onClick={this.handleMove}><span className="glyphicon glyphicon-move"></span></a>
+								<ItemAction handleDelte={this.handleDelte} handleEdit={this.handleEdit} />
 							</td>
 			</tr>
 
