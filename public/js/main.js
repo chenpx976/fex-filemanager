@@ -32778,8 +32778,7 @@ var Container = React.createClass({
 			};
 		}).bind(this));
 	},
-	handleEdit: function handleEdit(elem) {},
-	handleMove: function handleMove(elem) {
+	handleFolderMove: function handleFolderMove(elem) {
 		console.log(elem);
 		$.ajax({
 			url: 'api/manager/put/directory',
@@ -32799,11 +32798,29 @@ var Container = React.createClass({
 					console.log(key, folderName, datas['directories']);
 				}
 			};
-		}).bind(this)).fail(function () {
-			console.log("error");
-		}).always(function () {
-			console.log("complete");
-		});
+		}).bind(this));
+	},
+	handleFileMove: function handleFileMove(elem) {
+		console.log(elem);
+		$.ajax({
+			url: 'api/manager/put/file',
+			type: 'POST',
+			data: elem
+		}).done((function (dataJson) {
+			console.log("success:", dataJson);
+			if (dataJson.status) {
+				var datas = this.state.data;
+				var key = datas['files'].indexOf(elem.oldFile);
+				if (key > -1) {
+					datas['files'][key] = elem.newFile;
+					this.setState({
+						data: datas
+					});
+				} else {
+					console.log(key, folderName, datas['files']);
+				}
+			};
+		}).bind(this));
 	},
 	componentDidMount: function componentDidMount() {
 		$.ajax({
@@ -32863,12 +32880,12 @@ var Container = React.createClass({
 		var folders = data['directories'].map((function (elem, index) {
 			var simpleName = elem.split('/').pop();
 			var data = { simpleName: simpleName, folderName: elem };
-			return React.createElement(FolderItem, { handleDelte: this.handleFolderDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
+			return React.createElement(FolderItem, { handleDelte: this.handleFolderDelte, handleMove: this.handleFolderMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
 		}).bind(this));
 		var files = data['files'].map((function (elem, index) {
 			var simpleName = elem.split('/').pop();
 			var data = { simpleName: simpleName, fileName: elem };
-			return React.createElement(FileItem, { handleDelte: this.handleFileDelte, handleMove: this.handleMove, handleDoubleClick: this.folderClick, folderPath: this.state.path, data: data });
+			return React.createElement(FileItem, { handleDelte: this.handleFileDelte, handleMove: this.handleFileMove, handleDoubleClick: this.folderClick, filePath: this.state.path, data: data });
 		}).bind(this));
 		// var tableData = data.each(function(index, el) {
 		// 	console.log(index, el);
@@ -32959,18 +32976,17 @@ var FileItem = React.createClass({
 		});
 	},
 	onModalSubmit: function onModalSubmit(elem) {
-		this.props.handleMove({ oldFile: this.props.data.fileName, newFileName: elem.fileName });
+		this.props.handleMove({ oldFile: this.props.data.fileName, newFile: elem.folderName });
 		this.setState({
 			editState: !this.state.editState
 		});
 	},
-	handleMove: function handleMove() {},
 	render: function render() {
 		var simpleName = this.props.data.simpleName;
 		var fileName = this.props.data.fileName;
 		var editState = this.state.editState;
 		if (editState) {
-			var tpl = React.createElement(Modal, { onModalSubmit: this.onModalSubmit, onToggleForm: this.handleEdit, filePath: this.props.filePath, formDisplayed: this.state.editState, fileName: fileName, simpleName: simpleName });
+			var tpl = React.createElement(Modal, { onModalSubmit: this.onModalSubmit, onToggleForm: this.handleEdit, folderPath: this.props.filePath, formDisplayed: this.state.editState, fileName: fileName, simpleName: simpleName });
 		} else {
 			var tpl = React.createElement(
 				'a',
@@ -33171,7 +33187,7 @@ var Modal = React.createClass({
           React.createElement(
             'label',
             { htmlFor: 'qtitle' },
-            '文件夹名'
+            '改个名字'
           ),
           React.createElement('input', { ref: 'folderName', type: 'text', className: 'form-control', id: 'qtitle', placeholder: this.props.simpleName })
         ),

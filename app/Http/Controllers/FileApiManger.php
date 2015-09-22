@@ -56,6 +56,14 @@ class FileApiManger extends Controller
         $responseMsg = ['status'=>$deleteFile,'time'=>date('Y-m-d H:i:s'),'floderName'=>$request->input('fileName')];
         return response()->json($responseMsg);
     }
+    public function putFile(Request $request)
+    {
+        $moveFloder = Storage::move($request->input('oldFile'),$request->input('newFile'));
+        // var_dump($moveFloder);
+        $responseMsg = ['status'=>$moveFloder,'time'=>date('Y-m-d H:i:s'),'fileName'=>$request->input('oldFile')];
+        return response()->json($responseMsg);
+    }
+
 
     /**
      * Display a listing of the resource.

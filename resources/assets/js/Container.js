@@ -95,10 +95,7 @@ var Container = React.createClass({
 		  };
 		}.bind(this));
 	},
-	handleEdit: function (elem) {
-
-	},
-	handleMove: function (elem) {
+	handleFolderMove: function (elem) {
 		console.log(elem);
 		$.ajax({
 		  url: 'api/manager/put/directory',
@@ -120,13 +117,31 @@ var Container = React.createClass({
 
 		  	}
 		  };
-		}.bind(this))
-		.fail(function() {
-		  console.log("error");
+		}.bind(this));
+	},
+	handleFileMove: function (elem) {
+		console.log(elem);
+		$.ajax({
+		  url: 'api/manager/put/file',
+		  type: 'POST',
+		  data: elem,
 		})
-		.always(function() {
-		  console.log("complete");
-		});
+		.done(function(dataJson) {
+		  console.log("success:", dataJson);
+		  if (dataJson.status) {
+		  	var datas = this.state.data;
+		  	var key = datas['files'].indexOf(elem.oldFile);
+		  	if (key > -1) {
+		  		datas['files'][key] = elem.newFile;
+		  		this.setState({
+		  			data: datas
+		  		});
+		  	}else{
+		  		console.log(key,folderName,datas['files']);
+
+		  	}
+		  };
+		}.bind(this));
 	},
 	componentDidMount: function() {
 		$.ajax({
@@ -188,12 +203,12 @@ var Container = React.createClass({
 		var folders = data['directories'].map(function(elem,index) {
 			var simpleName = elem.split('/').pop();
 			var data = {simpleName:simpleName,folderName:elem};
-			return <FolderItem handleDelte={this.handleFolderDelte} handleMove={this.handleMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
+			return <FolderItem handleDelte={this.handleFolderDelte} handleMove={this.handleFolderMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
 		}.bind(this));
 		var files = data['files'].map(function(elem,index) {
 			var simpleName = elem.split('/').pop();
 			var data = {simpleName:simpleName,fileName:elem};
-			return <FileItem handleDelte={this.handleFileDelte} handleMove={this.handleMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
+			return <FileItem handleDelte={this.handleFileDelte} handleMove={this.handleFileMove}  handleDoubleClick={this.folderClick}  filePath={this.state.path}  data={data}  />;
 		}.bind(this));
 		// var tableData = data.each(function(index, el) {
 		// 	console.log(index, el);

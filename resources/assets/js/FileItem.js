@@ -19,20 +19,17 @@ var FileItem = React.createClass({
 		});
 	},
 	onModalSubmit: function (elem) {
-		this.props.handleMove({oldFile:this.props.data.fileName, newFileName: elem.fileName});
+		this.props.handleMove({oldFile:this.props.data.fileName, newFile: elem.folderName});
 		this.setState({
 			editState: !this.state.editState
 		});
-	},
-	handleMove: function () {
-
 	},
 	render: function() {
 		var simpleName = this.props.data.simpleName;
 		var fileName = this.props.data.fileName;
 		var editState = this.state.editState;
 		if (editState) {
-			var tpl = <Modal onModalSubmit={this.onModalSubmit} onToggleForm={this.handleEdit} filePath={this.props.filePath} formDisplayed={this.state.editState}  fileName={fileName} simpleName={simpleName} />;
+			var tpl = <Modal onModalSubmit={this.onModalSubmit} onToggleForm={this.handleEdit} folderPath={this.props.filePath} formDisplayed={this.state.editState}  fileName={fileName} simpleName={simpleName} />;
 		} else{
 			var tpl = <a onClick={this.handleClick} onDoubleClick={this.handleDoubleClick}>{simpleName}</a>
 		}
