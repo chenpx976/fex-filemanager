@@ -35,7 +35,7 @@ var Modal = React.createClass({
         <div className="Modal" style={ styleObj }>
         <form ref="addModal" name="addFolder" className="clearfix" onSubmit={this.handleForm} >
           <div className="form-group">
-            <label htmlFor="qtitle">改个名字</label>
+            <label htmlFor="qtitle">名称</label>
             <input ref="folderName" type="text" className="form-control" id="qtitle" placeholder={this.props.simpleName} />
           </div>
           <button type="submit" className="btn btn-success pull-right">确认</button>

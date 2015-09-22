@@ -33190,7 +33190,7 @@ var Modal = React.createClass({
           React.createElement(
             'label',
             { htmlFor: 'qtitle' },
-            '改个名字'
+            '名称'
           ),
           React.createElement('input', { ref: 'folderName', type: 'text', className: 'form-control', id: 'qtitle', placeholder: this.props.simpleName })
         ),
