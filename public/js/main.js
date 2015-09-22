@@ -33243,10 +33243,10 @@ var Upload = React.createClass({
 				'form',
 				{ ref: 'Upload', onSubmit: this.handleSubmit, encType: 'multipart/form-data', name: 'Upload' },
 				React.createElement(
-					'input',
-					{ type: 'file', ref: 'file', onChange: this.handleFile, className: 'btn btn-default' },
-					React.createElement('span', { className: 'glyphicon glyphicon-cloud-upload' }),
-					'上传'
+					'button',
+					{ htmlFor: 'file', className: 'upload-text btn btn-default glyphicon glyphicon-cloud-upload' },
+					'上传',
+					React.createElement('input', { type: 'file', ref: 'file', onChange: this.handleFile, className: 'file-btn btn btn-default' })
 				)
 			)
 		);

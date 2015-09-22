@@ -6701,7 +6701,17 @@ tbody a,
   cursor: pointer;
 }
 .Upload {
-  display: inline-block;
+  float: left;
+}
+.Upload .file-btn {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  display: block;
+  height: 27px;
+  position: absolute;
+  width: 50px;
+  text-indent: -999em;
+  top: -8px;
 }
 
 /*# sourceMappingURL=app.css.map */

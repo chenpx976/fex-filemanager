@@ -21,7 +21,7 @@ var Upload = React.createClass({
 		return (
 			<div className="Upload">
 			<form ref="Upload" onSubmit={this.handleSubmit} encType="multipart/form-data" name="Upload" >
-				<input type="file"  ref="file" onChange={this.handleFile}  className="btn btn-default"><span className="glyphicon glyphicon-cloud-upload"></span>上传</input>
+				<button htmlFor="file" className="upload-text btn btn-default glyphicon glyphicon-cloud-upload">上传<input type="file"  ref="file" onChange={this.handleFile}  className="file-btn btn btn-default"></input></button>
 			</form>
 			</div>
 		);
