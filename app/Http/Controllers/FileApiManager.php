@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Storage;
 use File;
-class FileApiManger extends Controller
+class FileApiManager extends Controller
 {
     public function pathFile($path)
     {

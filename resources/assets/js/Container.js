@@ -199,7 +199,7 @@ var Container = React.createClass({
 	},
 	render: function() {
 		var data = this.state.data;
-		console.log('重新renderpath', this.state)
+		console.log('重新', this.state)
 		var folders = data['directories'].map(function(elem,index) {
 			var simpleName = elem.split('/').pop();
 			var data = {simpleName:simpleName,folderName:elem};

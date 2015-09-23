@@ -6,28 +6,31 @@
  - 前端技术选择`bootstrap`/`react`
  - 使用构建工具`Gulp`打包静态资源
  - 搭建步骤：
-	 - `composer install`
-	 - `npm i`
-	 - `gulp`
+   - `composer install`
+   - `npm i`
+   - `gulp`
  - 添加`helper`函数
-	 - 在`composer.json`配置`autoload`加载`files`
+   - 在`composer.json`配置`autoload`加载`files`
 
----
+#### TODO
 
-#### React开发：
- - `Laravel`作为后台`api`服务器
- - `React`使用`Ajax`请求数据，更新state
+  - [x] `Laravel`作为后台`api`服务器
+  - [x] `React`使用`Ajax`请求数据，更新state
+  - [ ] 优化后端返回的数据格式
+  - [ ] 调整`FileApiManager`
+  - [ ] 调整`React`组件结构
+  - [ ] 增加`Mixin`,减少重复代码
+  - [ ] 优化文件夹展现方式
 
 
-
-#### 项目要求：
+##### 项目要求：
 * 后端可以使用任意自己喜欢的语言，比如 PHP、Python、Java 或 Node。
 * 请记录下你在解决这个问题过程中的思考，你是如何一步步解决的，以及遇到哪些技术问题和感想等。
 * 将源码放在 github 上。
 
 建议：使用各种你认为最优秀的技术（工具、框架、库等），展现你的知识面。
 
-#### 在线网盘
+##### 在线网盘
 
 实现通过 Web 管理本地文件夹的功能，需求如下：
 

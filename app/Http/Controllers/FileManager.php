@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use \Storage;
 use \File;
 
-class FileManger extends Controller {
+class FileManager extends Controller {
 	public function pathFile($path)
 	{
 		$directories = Storage::directories($path);
@@ -23,7 +23,7 @@ class FileManger extends Controller {
 	 */
 	public function index() {
 		return view('filemanager.layout');
-		// return redirect()->action('FileManger@getPath');
+		// return redirect()->action('FileManager@getPath');
 	}
 	public function getPath($path = '') {
 		$data = $this->pathFile($path);
