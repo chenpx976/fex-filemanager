@@ -1,4 +1,3 @@
-var _ = require('underscore');
 window.$ = window.jQuery = require('jquery');
 $.ajaxSetup({
   headers: {
