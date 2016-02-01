@@ -1,10 +1,11 @@
 window.$ = window.jQuery = require('jquery');
 $.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
-  }
+	headers: {
+		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+	}
 });
 var React = require('react');
+var ReactDom = require('react-dom');
 var Header = require('./Header.js');
 var Container = require('./Container.js');
 var React = require('react');
@@ -24,5 +25,4 @@ var Main = React.createClass({
 
 
 
-React.render(<Main />, document.getElementsByTagName('body')[0]);
-
+ReactDom.render(<Main />, document.getElementById('app'));

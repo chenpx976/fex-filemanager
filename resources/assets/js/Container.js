@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var Breadcrumb = require('./Breadcrumb.js');
 var Modal = require('./Modal.js');
 var FolderItem = require('./FolderItem.js');
@@ -6,213 +6,216 @@ var FileItem = require('./FileItem.js');
 var Upload = require('./Upload.js');
 var Container = React.createClass({
 	getInitialState: function() {
-	  return {
-	  	data:{
-	  		directories: [],
-	  		files: []
-	  	},
-	  	links: [],
-	  	path: ''
-	  };
+		return {
+			data: {
+				directories: [],
+				files: []
+			},
+			links: [],
+			path: ''
+		};
 	},
-	onToggleForm: function (e) {
-	  e.preventDefault();
-	  this.setState({
-	    formDisplayed: !this.state.formDisplayed
-	  });
+	onToggleForm: function(e) {
+		e.preventDefault();
+		this.setState({
+			formDisplayed: !this.state.formDisplayed
+		});
 	},
-	onModalSubmit: function (elem) {
-		console.log(elem);
-		  $.ajax({
-		    url: 'api/manager/post/directory',
-		    type: 'POST',
-		    data: elem,
-		  })
-		  .done(function(dataJson) {
-		    console.log("success:", dataJson);
-		    if (dataJson.status) {
-		    	var datas = this.state.data;
-		    	datas['directories'].push(elem.folderName);
-		    	this.setState({
-		    		data: datas,
-		    		formDisplayed: !this.state.formDisplayed
-		    	});
-
-		    };
-		  }.bind(this))
-		  .fail(function() {
-		    console.log("error");
-		  })
-		  .always(function() {
-		    console.log("complete");
-		  });
-	},
-	handleFolderDelte: function (elem) {
+	onModalSubmit: function(elem) {
 		console.log(elem);
 		$.ajax({
-		  url: 'api/manager/delete/directory',
-		  type: 'POST',
-		  data: elem,
-		})
-		.done(function(dataJson) {
-		  console.log("success:", dataJson);
-		  if (dataJson.status) {
-		  	var datas = this.state.data;
-		  	var key = datas['directories'].indexOf(elem.folderName);
-		  	if (key > -1) {
-		  		datas['directories'].splice(key,1);
-		  		this.setState({
-		  			data: datas
-		  		});
-		  	}else{
-		  		console.log(key,folderName,datas['directories']);
+				url: 'api/manager/post/directory',
+				type: 'POST',
+				data: elem,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					datas['directories'].push(elem.folderName);
+					this.setState({
+						data: datas,
+						formDisplayed: !this.state.formDisplayed
+					});
 
-		  	}
-		  };
-		}.bind(this));
+				};
+			}.bind(this))
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
 	},
-	handleFileDelte: function (elem) {
+	handleFolderDelte: function(elem) {
 		console.log(elem);
 		$.ajax({
-		  url: 'api/manager/delete/file',
-		  type: 'POST',
-		  data: elem,
-		})
-		.done(function(dataJson) {
-		  console.log("success:", dataJson);
-		  if (dataJson.status) {
-		  	var datas = this.state.data;
-		  	var key = datas['files'].indexOf(elem.fileName);
-		  	if (key > -1) {
-		  		datas['files'].splice(key,1);
-		  		this.setState({
-		  			data: datas
-		  		});
-		  	}else{
-		  		console.log(key,fileName,datas['directories']);
+				url: 'api/manager/delete/directory',
+				type: 'POST',
+				data: elem,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					var key = datas['directories'].indexOf(elem.folderName);
+					if (key > -1) {
+						datas['directories'].splice(key, 1);
+						this.setState({
+							data: datas
+						});
+					} else {
+						console.log(key, folderName, datas['directories']);
 
-		  	}
-		  };
-		}.bind(this));
+					}
+				};
+			}.bind(this));
 	},
-	handleFolderMove: function (elem) {
+	handleFileDelte: function(elem) {
 		console.log(elem);
 		$.ajax({
-		  url: 'api/manager/put/directory',
-		  type: 'POST',
-		  data: elem,
-		})
-		.done(function(dataJson) {
-		  console.log("success:", dataJson);
-		  if (dataJson.status) {
-		  	var datas = this.state.data;
-		  	var key = datas['directories'].indexOf(elem.oldFolder);
-		  	if (key > -1) {
-		  		datas['directories'][key] = elem.newFolderName;
-		  		this.setState({
-		  			data: datas
-		  		});
-		  	}else{
-		  		console.log(key,folderName,datas['directories']);
+				url: 'api/manager/delete/file',
+				type: 'POST',
+				data: elem,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					var key = datas['files'].indexOf(elem.fileName);
+					if (key > -1) {
+						datas['files'].splice(key, 1);
+						this.setState({
+							data: datas
+						});
+					} else {
+						console.log(key, fileName, datas['directories']);
 
-		  	}
-		  };
-		}.bind(this));
+					}
+				};
+			}.bind(this));
 	},
-	handleFileMove: function (elem) {
+	handleFolderMove: function(elem) {
 		console.log(elem);
 		$.ajax({
-		  url: 'api/manager/put/file',
-		  type: 'POST',
-		  data: elem,
-		})
-		.done(function(dataJson) {
-		  console.log("success:", dataJson);
-		  if (dataJson.status) {
-		  	var datas = this.state.data;
-		  	var key = datas['files'].indexOf(elem.oldFile);
-		  	if (key > -1) {
-		  		datas['files'][key] = elem.newFile;
-		  		this.setState({
-		  			data: datas
-		  		});
-		  	}else{
-		  		console.log(key,folderName,datas['files']);
+				url: 'api/manager/put/directory',
+				type: 'POST',
+				data: elem,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					var key = datas['directories'].indexOf(elem.oldFolder);
+					if (key > -1) {
+						datas['directories'][key] = elem.newFolderName;
+						this.setState({
+							data: datas
+						});
+					} else {
+						console.log(key, folderName, datas['directories']);
 
-		  	}
-		  };
-		}.bind(this));
+					}
+				};
+			}.bind(this));
+	},
+	handleFileMove: function(elem) {
+		console.log(elem);
+		$.ajax({
+				url: 'api/manager/put/file',
+				type: 'POST',
+				data: elem,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					var key = datas['files'].indexOf(elem.oldFile);
+					if (key > -1) {
+						datas['files'][key] = elem.newFile;
+						this.setState({
+							data: datas
+						});
+					} else {
+						console.log(key, folderName, datas['files']);
+
+					}
+				};
+			}.bind(this));
 	},
 	componentDidMount: function() {
 		$.ajax({
-		  url: 'api/path/',
-		  dataType: 'json',
-		  success: function(data) {
-		    this.setState({
-		    	data: data.data,
-		    	path: data.path,
-		    	links: data.links,
-		    	formDisplayed: false
-		    });
-		    console.log("数据已经改变");
-		  }.bind(this)
+			url: 'api/path/',
+			dataType: 'json',
+			success: function(data) {
+				this.setState({
+					data: data.data,
+					path: data.path,
+					links: data.links,
+					formDisplayed: false
+				});
+				console.log("数据已经改变");
+			}.bind(this)
 		});
 	},
-	folderClick: function (elem) {
-		console.dir('点击事件',elem);
+	folderClick: function(elem) {
+		console.dir('点击事件', elem);
 		this.setState({
 			path: elem
 		});
 		$.ajax({
-		  url: 'api/path/' + elem,
-		  dataType: 'json',
-		  success: function(data) {
-		    this.setState({
-		    	data: data.data,
-		    	path: data.path,
-		    	links: data.links
-		    });
-		    console.log("数据已经改变");
-		  }.bind(this)
+			url: 'api/path/' + elem,
+			dataType: 'json',
+			success: function(data) {
+				this.setState({
+					data: data.data,
+					path: data.path,
+					links: data.links
+				});
+				console.log("数据已经改变");
+			}.bind(this)
 		});
 	},
-	onUpload: function (fd) {
-		fd.append('path',this.state.path);
+	onUpload: function(fd) {
+		fd.append('path', this.state.path);
 		$.ajax({
-		  url: 'api/manager/post/file',
-		  type: 'POST',
-		  data: fd,
-		  processData: false,
-		  contentType: false,
-		})
-		.done(function(dataJson) {
-		  console.log("success:", dataJson);
-		  if (dataJson.status) {
-		  	var datas = this.state.data;
-		  	datas['files'].push(dataJson.fileName);
-		  	this.setState({
-		  		data: datas
-		  	});
+				url: 'api/manager/post/file',
+				type: 'POST',
+				data: fd,
+				processData: false,
+				contentType: false,
+			})
+			.done(function(dataJson) {
+				console.log("success:", dataJson);
+				if (dataJson.status) {
+					var datas = this.state.data;
+					datas['files'].push(dataJson.fileName);
+					this.setState({
+						data: datas
+					});
 
-		  };
-		}.bind(this));
+				};
+			}.bind(this));
 	},
 	render: function() {
 		var data = this.state.data;
 		console.log('重新', this.state)
-		var folders = data['directories'].map(function(elem,index) {
+		var folders = data['directories'].map(function(elem, index) {
 			var simpleName = elem.split('/').pop();
-			var data = {simpleName:simpleName,folderName:elem};
+			var data = {
+				simpleName: simpleName,
+				folderName: elem
+			};
 			return <FolderItem handleDelte={this.handleFolderDelte} handleMove={this.handleFolderMove}  handleDoubleClick={this.folderClick}  folderPath={this.state.path}  data={data}  />;
 		}.bind(this));
-		var files = data['files'].map(function(elem,index) {
+		var files = data['files'].map(function(elem, index) {
 			var simpleName = elem.split('/').pop();
-			var data = {simpleName:simpleName,fileName:elem};
+			var data = {
+				simpleName: simpleName,
+				fileName: elem
+			};
 			return <FileItem handleDelte={this.handleFileDelte} handleMove={this.handleFileMove}  handleDoubleClick={this.folderClick}  filePath={this.state.path}  data={data}  />;
 		}.bind(this));
-		// var tableData = data.each(function(index, el) {
-		// 	console.log(index, el);
-		// });
 		return (
 			<div className="container">
 				<Breadcrumb links={this.state.links} path={this.state.path} handleClick={this.folderClick} />

@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var Breadcrumb = React.createClass({
 	handleClick: function (elem) {
 		this.props.handleClick(elem);
